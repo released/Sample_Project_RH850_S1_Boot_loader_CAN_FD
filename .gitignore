@@ -1,0 +1,6 @@
+/DefaultBuild/*
+!/DefaultBuild/boot0000_FFFF.hex
+/tmp/
+*.mtud
+*.log
+/QualityReport*
