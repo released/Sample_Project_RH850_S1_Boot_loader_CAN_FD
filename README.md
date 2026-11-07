@@ -62,12 +62,12 @@ CAN0/2/3/5 require board-level routing and compatible external transceivers.
 | `boot_app_handoff.h` | RAM cookie,AA/55 owner,ENTER/update requests |
 | `hal/image/device_image.c/.h` | Image CRC,entry/EBASE/512-vector bounds and INFO |
 | `hal/isp/boot_engine.c/.h` | Staging,version policy,blocks,replay,ABORT/END/VERIFY |
-| `hal/flash/device_flash.c`, `flash_geometry.c` | FCL and strict App-only geometry |
-| `hal/device/device_read.c`, `device_cpu.asm` | RAM-only unknown-Flash read and CPU handoff |
+| `hal/flash/device_flash.c`, `hal/flash/flash_geometry.c` | FCL and strict App-only geometry |
+| `hal/device/device_read.c`, `hal/device/device_cpu.asm` | RAM-only unknown-Flash read and CPU handoff |
 | `hal/can/device_can.c` | Device protocol wrapper;replies on the received bus |
 | `hal/can/rh850_can_ports.c/.h`, `can_port_config.h` | ISP compatibility API,port selection,source routing and completed-reply gate |
 | `hal/can/can_service.c/.h`, `rs_canfd*` | Shared v4 frame queues,TX events,bounded RX service and validated register driver |
-| `hal/can/can_config.c`, `can_board.c` | Exact ISP filters and R7F701684 EVM clock/pin/INTC adapter |
+| `hal/can/can_config.c`, `hal/can/can_board.c` | Exact ISP filters and R7F701684 EVM clock/pin/INTC adapter |
 | `tools/device_build.ps1` | C-header generation,CS+ preparation,actual-MOT/map guards and packaging |
 
 One bus claims metadata staging with RESET0A. Other buses may discover/read
@@ -107,13 +107,11 @@ an accepted START. Invalid App stays in Boot. ABORT does not restore erased data
 Normal updates enforce same/newer only when the valid installed App enables
 version control. FORCE_START bypasses ordering for that transaction only.
 
-## Verification and guide
+## Hardware requirements and guides
 
-Clean CC-RH builds,actual linked metadata/vector/RAM guards and actual C90
-engine/production-PC models are provided. Hardware CAN,FCL,ECC/reset/launch and
-power interruption tests are NOT RUN. The board transceiver/timing needs
-physical verification. Compiler license and alignment warnings are recorded
-in the engineering build log rather than suppressed.
+- Linked-image guards check metadata, vectors and RAM bounds.
+- The selected board, transceiver and bus timing define the hardware configuration.
+- Software models do not establish Flash/ECC, reset, launch or interrupted-update fault coverage; these require board-level qualification for the deployed configuration.
 
 - [Engineering and operation guide](https://released.github.io/slide_boot_loader_for_RL78/#rh850-can-device)
 - [Tool operation](https://released.github.io/slide_simple_renesas_isp_tool/#tool-operation)
